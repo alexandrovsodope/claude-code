@@ -16,22 +16,23 @@
   (RawInput grp:{expId}, converted to personal currency, category from Gemini), undo deletes personal copies.
   Harness: harness3.py/harness4.py. Test data (-100777, DEBUG) cleaned.
   NOT done: backfill of group expenses made before v2 into personal Траты (offered to user).
-- Групповой кошелёк, этап 3 (grp/grp_v3.json, build_grp3.py) — CURRENT LIVE, deployed 2026-09-23 19:12,
+- Групповой кошелёк, этап 3 (grp/grp_v3.json, build_grp3.py), deployed 2026-09-23 19:12,
   backup BACKUP_before_group3_2026-09-23.json (= grp_v2). Several expenses in one message/voice:
   Gemini returns expenses[] (object array), iterator 2033 (text) / 2055 (voice) → one card per expense;
   prompt deleted only on first bundle (__IMTINDEX__=1). Harness: harness5.py (verified 2 expenses + chatter).
+- Групповой кошелёк, этап 4 (grp/grp_v4.json, build_grp4.py) — CURRENT LIVE, deployed 2026-09-23 22:32,
+  backup BACKUP_before_group4_2026-09-23.json (= grp_v3). G13 (2210/2211): left_chat_member (not bot) → delete
+  their GroupMembers row silently; debts stay in ledger. Harness6 verified (bot-left ignored).
 
 ## Next (group wallet, later stages) — user asked to REMEMBER (credits may run out)
 - 🧾 PRIORITY: receipt split in group. Plan agreed-in-principle (not built yet):
   1) photo of receipt in group (reply to bot / «🧾 Чек» button) → Gemini parses items {name, price, qty} + service/tips.
   2) bot posts receipt card; each item is a button, people tap what they had (toggle, shows names);
      shared item tapped by several → split among them. New table GroupReceiptItems (ReceiptID, ChatID, Name, Price, Eaters, Payer).
-  3) payment mode: «💳 Платил один» (default = sender, switchable) OR «🙋 Каждый за себя»;
+  3) USER DECISION: after photo the bot ASKS each time: «💳 Платил один» (payer switchable) OR «🙋 Каждый за себя»;
      in «каждый за себя» a person can press «Я закрыл за…» and pick someone's item → only those items create debts.
-  4) «✅ Закрыть чек» → GroupExpenses + GroupLedger rows (Net = paid − eaten, service split proportionally) + personal sync.
+  4) «✅ Закрыть чек» → GroupExpenses + GroupLedger rows (Net = paid − eaten; USER DECISION: ignore tips/service) + personal sync.
   Cost note: each tap = one Make run (~5–10 ops).
-- 👋 Remove member who left the group: on message.left_chat_member delete their GroupMembers row
-  (new «на всех» expenses exclude them; their existing debts STAY in balance), post short notice. Small change.
 - Buttons to fix participants / payer on the card, unequal shares
 - Reminders, weekly summary
 - Invite-link 1-on-1 wallet (postponed by user)
