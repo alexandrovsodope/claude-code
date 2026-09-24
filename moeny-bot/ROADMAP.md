@@ -20,12 +20,20 @@
   backup BACKUP_before_group3_2026-09-23.json (= grp_v2). Several expenses in one message/voice:
   Gemini returns expenses[] (object array), iterator 2033 (text) / 2055 (voice) → one card per expense;
   prompt deleted only on first bundle (__IMTINDEX__=1). Harness: harness5.py (verified 2 expenses + chatter).
-- Групповой кошелёк, этап 4 (grp/grp_v4.json, build_grp4.py) — CURRENT LIVE, deployed 2026-09-23 22:32,
+- Групповой кошелёк, этап 4 (grp/grp_v4.json, build_grp4.py), deployed 2026-09-23 22:32,
   backup BACKUP_before_group4_2026-09-23.json (= grp_v3). G13 (2210/2211): left_chat_member (not bot) → delete
   their GroupMembers row silently; debts stay in ledger. Harness6 verified (bot-left ignored).
 
+- Групповой кошелёк, этап 5 — ЧЕКИ (grp_v5, greceipt.py) — CURRENT LIVE, deployed 2026-09-23 23:51 (backup = v4).
+  «🧾 Чек» или фото с подписью «чек» → Gemini разбирает позиции (без чаевых/сервиса, ≤20) → карточка:
+  на каждое блюдо [название][💳] + [✅ Платил(а) <отправитель>][🙋 Каждый за себя] + [❌ Отменить чек].
+  Состояние хранится в тексте карточки (без новой таблицы). Тап = 3 операции. Закрыть/отменить может только отправитель.
+  Закрытие → GroupExpenses (kind=receipt) + GroupLedger + личные копии; ↩️ отменяет как обычную трату.
+  Сбой API курсов больше не теряет личные копии (Resume; копия пишется, если валюта совпадает или курс получен).
+  Цена: фото ≈ 9 оп., тап 3 оп., закрытие ≈ 25–30 оп. Ограничение: 2 одновременных тапа — один может потеряться.
+
 ## Next (group wallet, later stages) — user asked to REMEMBER (credits may run out)
-- 🧾 PRIORITY: receipt split in group. Plan agreed-in-principle (not built yet):
+- 🧾 receipt split — DONE in этап 5 (исходный план ниже для истории):
   1) photo of receipt in group (reply to bot / «🧾 Чек» button) → Gemini parses items {name, price, qty} + service/tips.
   2) bot posts receipt card; each item is a button, people tap what they had (toggle, shows names);
      shared item tapped by several → split among them. New table GroupReceiptItems (ReceiptID, ChatID, Name, Price, Eaters, Payer).
